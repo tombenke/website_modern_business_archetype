@@ -1,6 +1,6 @@
 # This is a configuration file for the kickoff utility
 description: |
-    This is a project archetype for a single page website.
+    This is a project archetype for business website.
     New projects can be generated from this archetype by the
     [kickoff](https://github.com/tombenke/kickoff) utility.
 
@@ -111,4 +111,3 @@ converters:
     handlebars:
         - package.json
         - src/parameters.json
-        - src/md/uvp.md
