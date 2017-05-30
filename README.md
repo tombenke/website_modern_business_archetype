@@ -32,7 +32,7 @@ that you may give, or simple press `Enter` in case you are satisfied with the de
     ? The Home Heading text: The Home-Heading above the UVP
     ? The Unique Value Proposition: This is the UVP, you can define it later
     Converting package.json as Handlebars template
-    Converting src/parameters.json as Handlebars template
+    Converting src/parameters.yml as Handlebars template
 
 After all the questions answered, the project will be generated.
 The project has the following structure:
@@ -74,7 +74,7 @@ You can do the following steps:
 2. Edit the template and the parameter files according to your needs:
 
     - src/templates/index.html
-    - src/parameters.json
+    - src/parameters.yml
 
 3. Change the images under the `src/img` folder.
 

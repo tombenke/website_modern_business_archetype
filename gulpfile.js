@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var data = require('gulp-data');
 var less = require('gulp-less');
 var browserSync = require('browser-sync').create();
 var header = require('gulp-header');
@@ -8,6 +9,25 @@ var uglify = require('gulp-uglify');
 var markdown = require('gulp-markdown');
 var mustache = require("gulp-mustache");
 var pkg = require('./package.json');
+
+var verbose = false;
+var fs = require('fs');
+var path = require('path');
+
+// Load the YAML parser module
+var jsyaml = require( 'js-yaml' );
+
+readYaml = function(fileName) {
+    var content = null;
+
+    try {
+        content = jsyaml.load(fs.readFileSync(path.resolve(fileName),'utf-8'));
+    } catch (err) {
+        console.log(err);
+        process.exit(1);
+    }
+    return content;
+}
 
 gulp.task('markdown', function() {
     return gulp.src("src/md/*.md")
@@ -20,7 +40,9 @@ gulp.task('markdown', function() {
 
 gulp.task('mustache', ['markdown'], function() {
     return gulp.src("src/templates/*.html")
-        .pipe(mustache('src/parameters.json'))
+        .pipe(data(function() { return readYaml('./src/parameters.yml') }))
+        .pipe(mustache())
+//        .pipe(mustache('src/parameters.json'))
         .pipe(gulp.dest("dist/"))
         .pipe(browserSync.reload({
             stream: true
@@ -99,7 +121,7 @@ gulp.task('watch', ['browserSync', 'markdown', 'mustache', 'less', 'minify-css',
     gulp.watch('src/md/**', ['markdown']);
     gulp.watch(['src/templates/**',
                 'src/partials/**',
-                'src/parameters.json'], ['mustache']);
+                'src/parameters.yml'], ['mustache']);
     // Reloads the browser whenever HTML or JS files change
     gulp.watch('dist/*.html', browserSync.reload);
     gulp.watch('dist/js/**/*.js', browserSync.reload);

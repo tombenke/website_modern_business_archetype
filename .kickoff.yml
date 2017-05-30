@@ -20,7 +20,7 @@ postscript: >
     2. Edit the template and the parameters according to your needs:
 
         - src/templates/index.html
-        - src/parameters.json
+        - src/parameters.yml
 
     3. Change the images under the `src/img` folder.
 
