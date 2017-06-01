@@ -9,12 +9,8 @@ var uglify = require('gulp-uglify');
 var markdown = require('gulp-markdown');
 var mustache = require("gulp-mustache");
 var pkg = require('./package.json');
-
-var verbose = false;
 var fs = require('fs');
 var path = require('path');
-
-// Load the YAML parser module
 var jsyaml = require( 'js-yaml' );
 
 readYaml = function(fileName) {
@@ -63,7 +59,7 @@ gulp.task('less', function() {
     return gulp.src('src/less/modern-business.less')
         .pipe(less())
         .pipe(header(banner, { pkg: pkg }))
-        .pipe(gulp.dest('dist/css'))
+        .pipe(gulp.dest('src/css'))
         .pipe(browserSync.reload({
             stream: true
         }))
@@ -71,10 +67,10 @@ gulp.task('less', function() {
 
 // Minify compiled CSS
 gulp.task('minify-css', ['less'], function() {
-    return gulp.src('dist/css/modern-business.css')
+    return gulp.src('src/css/modern-business.css')
         .pipe(cleanCSS({ compatibility: 'ie8' }))
         .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest('dist/css'))
+        .pipe(gulp.dest('src/css'))
         .pipe(browserSync.reload({
             stream: true
         }))
@@ -93,7 +89,7 @@ gulp.task('minify-js', function() {
 });
 
 // Copy vendor libraries from /node_modules into /vendor
-gulp.task('copy', function() {
+gulp.task('copy', ['markdown', 'mustache', 'less', 'minify-css', 'minify-js'], function() {
     gulp.src('src/font-awesome/**').pipe(gulp.dest('dist/font-awesome'))
     gulp.src('src/fonts/**').pipe(gulp.dest('dist/fonts'))
     gulp.src('src/js/**').pipe(gulp.dest('dist/js'))
@@ -115,13 +111,13 @@ gulp.task('browserSync', function() {
 
 // Dev task with browserSync
 gulp.task('watch', ['browserSync', 'markdown', 'mustache', 'less', 'minify-css', 'minify-js', 'copy'], function() {
-    gulp.watch('less/*.less', ['less']);
-    gulp.watch('dist/css/*.css', ['minify-css']);
-    gulp.watch('dist/js/*.js', ['minify-js']);
-    gulp.watch('src/md/**', ['markdown']);
+    gulp.watch('src/less/*.less', ['less']);
+    gulp.watch('src/css/*.css', ['minify-css']);
+    gulp.watch('src/js/*.js', ['minify-js']);
+    gulp.watch('src/md/**', ['copy']);
     gulp.watch(['src/templates/**',
                 'src/partials/**',
-                'src/parameters.yml'], ['mustache']);
+                'src/parameters.yml'], ['copy']);
     // Reloads the browser whenever HTML or JS files change
     gulp.watch('dist/*.html', browserSync.reload);
     gulp.watch('dist/js/**/*.js', browserSync.reload);

@@ -110,4 +110,4 @@ questions:
 converters:
     handlebars:
         - package.json
-        - src/parameters.json
+        - src/parameters.yml
